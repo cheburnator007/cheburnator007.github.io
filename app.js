@@ -132,3 +132,5 @@ function clearCanvas() {
         resultElement.style.color = "#333";
     }
 }
+
+//проверка
