@@ -22,13 +22,22 @@ let targetLetter = '';
 
 // Задаем наш словарь. 
 // Я вписал алфавит иврита для отработки моторики письма справа-налево
-const alphabet = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'כ', 'ל', 'מ', 'נ', 'ס', 'ע', 'פ', 'צ', 'ק', 'ר', 'ש', 'ת'];
+const alphabet = Object.keys(lettersDictionary);
 
-// Функция выбора случайной буквы
+// Обновленная функция: выбирает букву и обновляет UI
 function setRandomLetter() {
     const randomIndex = Math.floor(Math.random() * alphabet.length);
     targetLetter = alphabet[randomIndex];
-    console.log(`🔀 Выбрана новая буква: ${targetLetter}`);
+    
+    // Достаем данные выбранной буквы из словаря
+    const letterInfo = lettersDictionary[targetLetter];
+
+    // Выводим данные в HTML
+    document.getElementById('letterTitle').innerText = letterInfo.name;
+    document.getElementById('letterTrans').innerText = `Произношение: ${letterInfo.transcription}`;
+    document.getElementById('letterDesc').innerText = letterInfo.desc;
+
+    console.log(`🔀 Выбрана новая буква: ${targetLetter} (${letterInfo.name})`);
 }
 
 opentype.load('BN_World.ttf', function(err, font) {
@@ -152,5 +161,4 @@ function clearCanvas() {
         resultElement.style.color = "#333";
     }
 }
-
-//проверка ебана
+//НОВЫЙ

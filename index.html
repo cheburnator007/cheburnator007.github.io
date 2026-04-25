@@ -3,22 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Тренажер Моторики</title>
+    <title>Тренажер Иврита</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <canvas id="drawingBoard"></canvas>
-		<script src="https://cdn.jsdelivr.net/npm/opentype.js@latest/dist/opentype.min.js"></script>
-    <script src="app.js"></script>
-	
-	<div style="position: absolute; bottom: 20px; text-align: center; width: 100%;">
-        <h2 id="resultText" style="color: #333; margin-bottom: 10px; font-family: sans-serif;">Нарисуй букву</h2>
-        
-        <button onclick="checkAccuracy()" style="padding: 15px 20px; font-size: 16px; border-radius: 8px; border: none; background: #4CAF50; color: white; margin-right: 5px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">Проверить</button>
-        
-        <button onclick="clearCanvas()" style="padding: 15px 20px; font-size: 16px; border-radius: 8px; border: none; background: #2196F3; color: white; margin-right: 5px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">Сбросить</button>
+    <div style="position: absolute; top: 30px; text-align: center; width: 100%; z-index: 10; pointer-events: none;">
+        <h1 id="letterTitle" style="margin: 0; color: #2c3e50; font-family: sans-serif; font-size: 28px; text-shadow: 1px 1px 2px white;">Буква</h1>
+        <p id="letterTrans" style="margin: 5px 0; color: #e67e22; font-family: sans-serif; font-size: 18px; font-weight: bold; text-shadow: 1px 1px 2px white;">[Транскрипция]</p>
+        <p id="letterDesc" style="margin: 0; color: #555; font-family: sans-serif; font-size: 14px; padding: 0 20px;">Описание</p>
+    </div>
 
+    <canvas id="drawingBoard"></canvas>
+    
+    <div style="position: absolute; bottom: 20px; text-align: center; width: 100%;">
+        <h2 id="resultText" style="color: #333; margin-bottom: 10px; font-family: sans-serif;">Нарисуй букву</h2>
+        <button onclick="checkAccuracy()" style="padding: 15px 20px; font-size: 16px; border-radius: 8px; border: none; background: #4CAF50; color: white; margin-right: 5px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">Проверить</button>
+        <button onclick="clearCanvas()" style="padding: 15px 20px; font-size: 16px; border-radius: 8px; border: none; background: #2196F3; color: white; margin-right: 5px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">Сбросить</button>
         <button onclick="nextLetter()" style="padding: 15px 20px; font-size: 16px; border-radius: 8px; border: none; background: #FF9800; color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">Далее ➔</button>
     </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/opentype.js@latest/dist/opentype.min.js"></script>
+    
+    <script src="lettersData.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
