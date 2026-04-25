@@ -59,7 +59,7 @@ function drawTargetLetter() {
     const textWidth = targetFont.getAdvanceWidth(targetLetter, fontSize);
     
     const startX = (canvas.width - textWidth) / 2;
-    const startY = canvas.height * 0.65; 
+    const startY = canvas.height * 0.45; 
 
     letterPath = targetFont.getPath(targetLetter, startX, startY, fontSize);
     letterPath.fill = '#e0e0e0'; 
