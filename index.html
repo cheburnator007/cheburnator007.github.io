@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hi-Tech Service | Coming Soon</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Montserrat:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+         --bg-color: #f4f4f4; /* Из вашего исходника */
+        --surface-color: #ffffff; /* Из вашего исходника */
+        --primary-color: #007bff; /* Из вашего исходника */
+        --text-color: #333333; /* Из вашего исходника */
+        --text-secondary: #6c757d; /* Из вашего исходника */
+        --neon-glow: 0 0 15px rgba(0, 123, 255, 0.4);
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-color);
+        color: var(--text-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* Анимированный фон */
+        .bg-gradient {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, #1e293b 0%, #f4f4f4 100%);
+            z-index: -1;
+        }
+
+        .container {
+            text-align: center;
+            padding: 2rem;
+            max-width: 600px;
+            z-index: 1;
+        }
+
+        .logo {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+            text-shadow: var(--neon-glow);
+            animation: pulse 3s infinite ease-in-out;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        .status-card {
+            background: var(--surface-color);
+            padding: 2rem;
+            border-radius: 16px;
+       
+        border: 1px solid #dee2e6;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            width: 65%; /* Можно менять процент готовности */
+            height: 100%;
+            background: var(--primary-color);
+            box-shadow: var(--neon-glow);
+            border-radius: 4px;
+            animation: slide 2s ease-out;
+        }
+
+        .contacts {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .contact-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .contact-link:hover {
+            color: var(--primary-color);
+        }
+
+        .lang-switch {
+            position: absolute;
+            top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            background: none;
+            border: 1px solid #334155;
+            color: var(--text-secondary);
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button.active {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(0.98); }
+        }
+
+        @keyframes slide {
+            from { width: 0; }
+            to { width: 65%; }
+        }
+
+        [lang="he"], [lang="ar"] { direction: rtl; }
+    </style>
+</head>
+<body lang="he">
+    <div class="bg-gradient"></div>
+
+    <div class="lang-switch">
+        <button onclick="changeLang('he')" class="active">עברית</button>
+        <button onclick="changeLang('en')">English</button>
+        <button onclick="changeLang('ru')">Русский</button>
+    </div>
+
+    <div class="container">
+        <div class="logo" id="siteTitle">היי-טק שירות</div>
+        <div class="status-card">
+            <h1 id="mainText">האתר נמצא בתהליך שדרוג</h1>
+            <p id="subText" style="color: var(--text-secondary);">אנחנו בונים עבורכם משהו חדש ומתקדם. נחזור בקרוב!</p>
+            
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+            <div id="percent" style="font-size: 0.8rem; color: var(--primary-color);">65% הושלם</div>
+        </div>
+
+        <div class="contacts">
+            <a href="mailto:admin@high-tech-services.org" class="contact-link">Email</a>
+            <a href="https://wa.me/+972527202507" class="contact-link">WhatsApp</a>
+            <a href="https://t.me/cheburnator_007" class="contact-link">Telegram</a>
+        </div>
+    </div>
+
+    <script>
+        const content = {
+            'he': {
+                title: 'היי-טק שירות',
+                main: 'האתר נמצא בתהליך שדרוג',
+                sub: 'אנחנו בונים עבורכם משהו חדש ומתקדם. נחזור בקרוב!',
+                percent: '65% הושלם'
+            },
+            'ru': {
+                title: 'Hi-Tech Сервис',
+                main: 'Сайт находится на обновлении',
+                sub: 'Мы готовим для вас что-то новое и технологичное. Скоро вернемся!',
+                percent: 'Готово на 65%'
+            },
+            'en': {
+                title: 'Hi-Tech Service',
+                main: 'Website Under Construction',
+                sub: 'We are building something new and advanced for you. Coming back soon!',
+                percent: '65% Complete'
+            }
+        };
+
+        function changeLang(lang) {
+            document.body.lang = lang;
+            document.getElementById('siteTitle').textContent = content[lang].title;
+            document.getElementById('mainText').textContent = content[lang].main;
+            document.getElementById('subText').textContent = content[lang].sub;
+            document.getElementById('percent').textContent = content[lang].percent;
+
+            document.querySelectorAll('button').forEach(btn => {
+                btn.classList.toggle('active', btn.getAttribute('onclick').includes(lang));
+            });
+        }
+    </script>
+</body>
+</html>

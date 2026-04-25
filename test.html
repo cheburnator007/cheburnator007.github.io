@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cheburnator Mermaid to PDF</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        :root { --panel-width: 400px; }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; height: 100vh; display: flex; flex-direction: column; background: #f0f2f5; }
+        
+        header { 
+            background: #2c3e50; color: white; padding: 10px 20px; 
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2); z-index: 10;
+        }
+
+        .main-layout { display: flex; flex: 1; overflow: hidden; position: relative; }
+
+        #editor-container { 
+            width: var(--panel-width); min-width: 0; background: #ffffff; 
+            display: flex; flex-direction: column; border-right: 1px solid #ccc;
+            transition: width 0.2s ease; position: relative;
+        }
+
+        #editor { 
+            flex: 1; padding: 15px; border: none; font-family: 'Consolas', monospace; 
+            font-size: 14px; outline: none; resize: none; background: #f8f9fa;
+        }
+
+        .toggle-btn {
+            position: absolute; right: -15px; top: 50%; transform: translateY(-50%);
+            width: 30px; height: 30px; background: #34495e; color: white;
+            border-radius: 50%; border: none; cursor: pointer; z-index: 5;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        #viewer { 
+            flex: 1; overflow: auto; background: #ffffff; padding: 40px;
+            display: flex; align-items: flex-start; justify-content: center;
+        }
+
+        #graph-output { min-width: fit-content; }
+
+        .controls { display: flex; gap: 10px; }
+        button { 
+            background: #27ae60; color: white; border: none; 
+            padding: 8px 15px; cursor: pointer; border-radius: 4px; font-weight: bold;
+        }
+        button.pdf-btn { background: #e74c3c; }
+        button:hover { opacity: 0.9; }
+
+        /* Стили для печати (чтобы в PDF была только схема) */
+        @media print {
+            body * { visibility: hidden; }
+            #graph-output, #graph-output * { visibility: visible; }
+            #graph-output { position: absolute; left: 0; top: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <span><strong>Cheburnator</strong> | Mermaid to PDF</span>
+    <div class="controls">
+        <button onclick="togglePanel()">Скрыть/Показать код</button>
+        <button class="pdf-btn" onclick="exportPDF()">Сохранить в PDF</button>
+    </div>
+</header>
+
+<div class="main-layout">
+    <div id="editor-container" style="width: 400px;">
+        <textarea id="editor" spellcheck="false">
+graph TD
+    Start[Начало] --> Process1[Крупный узел системы]
+    Process1 --> Sub1[Подсистема Логи]
+    Process1 --> Sub2[Подсистема Бэкап]
+    Sub1 --> End[Завершение]
+    Sub2 --> End
+    
+    style Start fill:#f9f,stroke:#333,stroke-width:4px
+    style End fill:#ccf,stroke:#f66,stroke-width:2px,stroke-dasharray: 5 5
+        </textarea>
+    </div>
+
+    <div id="viewer">
+        <div id="graph-output" class="mermaid"></div>
+    </div>
+</div>
+
+<script>
+    // Настройка Mermaid для корректного рендера больших схем
+    mermaid.initialize({ 
+        startOnLoad: false, 
+        theme: 'default',
+        flowchart: { useMaxWidth: false, htmlLabels: true }
+    });
+
+    const editor = document.getElementById('editor');
+    const container = document.getElementById('editor-container');
+    const output = document.getElementById('graph-output');
+
+    async function renderGraph() {
+        const code = editor.value;
+        if(!code.trim()) return;
+        
+        output.removeAttribute('data-processed');
+        output.innerHTML = code;
+        try {
+            await mermaid.run({ nodes: [output] });
+        } catch (e) {
+            // Ошибки синтаксиса при наборе
+        }
+    }
+
+    editor.addEventListener('input', renderGraph);
+    window.addEventListener('load', renderGraph);
+
+    function togglePanel() {
+        container.style.width = container.style.width === "0px" ? "400px" : "0px";
+    }
+
+    // Функция экспорта в PDF
+    function exportPDF() {
+    const svgHtml = document.getElementById('graph-output').innerHTML;
+    if (!svgHtml) return;
+
+    // Создаем невидимый iframe
+    const iframe = document.createElement('iframe');
+    iframe.style.position = 'fixed';
+    iframe.style.right = '0';
+    iframe.style.bottom = '0';
+    iframe.style.width = '0';
+    iframe.style.height = '0';
+    iframe.style.border = '0';
+    document.body.appendChild(iframe);
+
+    const doc = iframe.contentWindow.document;
+    doc.write(`
+        <html>
+        <head>
+            <style>
+                body { margin: 0; display: flex; justify-content: center; align-items: flex-start; }
+                svg { width: auto; height: auto; max-width: 100%; }
+                @media print { @page { margin: 10mm; } }
+            </style>
+        </head>
+        <body>
+            ${svgHtml}
+        </body>
+        </html>
+    `);
+    doc.close();
+
+    // Ждем загрузки контента в iframe и вызываем печать
+    iframe.contentWindow.focus();
+    setTimeout(() => {
+        iframe.contentWindow.print();
+        // Удаляем iframe после закрытия окна печати
+        document.body.removeChild(iframe);
+    }, 500);
+}
+</script>
+
+</body>
+</html>
