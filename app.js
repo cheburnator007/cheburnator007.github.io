@@ -117,13 +117,57 @@ function draw(e) {
 function stopDrawing() {
     if (!isDrawing) return;
     isDrawing = false;
-    
-    console.log(`✅ Линия закончена. Собрано точек: ${userStroke.length}`);
-    
-    // Ловушка психологии: если точек слишком мало, значит это был случайный тык
+   
     if (userStroke.length > 5) {
-        console.log("🚀 Пора переходить к Фазе 4: Проверка точности!");
-        // Здесь мы скоро вызовем функцию проверки
+        checkAccuracy(); // Вызываем проверку!
+    }
+}
+
+// --- ФАЗА 4: ПРОВЕРКА ТОЧНОСТИ ---
+function checkAccuracy() {
+    if (!letterPath || userStroke.length === 0) return;
+
+    // 1. Превращаем контур opentype.js в понятный для Canvas объект Path2D
+    const svgPathString = letterPath.toPathData(2); 
+    const canvasPath = new Path2D(svgPathString);
+
+    let hitCount = 0;
+    
+    // 2. Задаем "допуск" (погрешность). Насколько широкой мы считаем линию буквы.
+    // 40 пикселей означает, что если палец ушел в сторону на 20px, это еще ок.
+    ctx.lineWidth = 40; 
+
+    // 3. Проверяем каждую точку пользователя
+    for (let i = 0; i < userStroke.length; i++) {
+        const point = userStroke[i];
+        
+        // Спрашиваем у холста: эта точка (x, y) лежит внутри "толстого" контура буквы?
+        if (ctx.isPointInStroke(canvasPath, point.x, point.y)) {
+            hitCount++;
+        }
+    }
+
+    // 4. Считаем проценты
+    const accuracy = Math.round((hitCount / userStroke.length) * 100);
+    console.log(`🎯 Попаданий: ${hitCount} из ${userStroke.length}. Точность: ${accuracy}%`);
+
+    // --- ФАЗА 5: ПСИХОЛОГИЧЕСКИЙ ОТКЛИК (UI) ---
+    const resultElement = document.getElementById('resultText');
+    
+    if (accuracy >= 80) {
+        resultElement.innerText = `Отлично! Точность: ${accuracy}% 🏆`;
+        resultElement.style.color = "#4CAF50"; // Зеленый
+    } else if (accuracy >= 50) {
+        resultElement.innerText = `Неплохо: ${accuracy}%. Попробуй ровнее!`;
+        resultElement.style.color = "#FF9800"; // Оранжевый
+    } else {
+        resultElement.innerText = `Мимо: ${accuracy}%. Давай еще раз!`;
+        resultElement.style.color = "#F44336"; // Красный
+        
+        // Маленький хак: если есть вибромоторчик в телефоне - вибрируем при ошибке
+        if (navigator.vibrate) {
+            navigator.vibrate(200); 
+        }
     }
 }
 
@@ -131,6 +175,12 @@ function stopDrawing() {
 function clearCanvas() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     userStroke = [];
-    drawTargetLetter(); // Перерисовываем серый трафарет после очистки
+    drawTargetLetter(); // Перерисовываем серый трафарет
+    
+    const resultElement = document.getElementById('resultText');
+    if(resultElement) {
+        resultElement.innerText = "Нарисуй букву";
+        resultElement.style.color = "#333";
+    }
     console.log("🧹 Холст очищен");
 }
