@@ -15,10 +15,21 @@ window.addEventListener('resize', () => {
 });
 resizeCanvas();
 
-// --- ФАЗА 2: РАБОТА СО ШРИФТОМ ---
+// --- ФАЗА 2: РАБОТА СО ШРИФТОМ И АЛФАВИТОМ ---
 let targetFont = null;
 let letterPath = null;
-const targetLetter = 'א'; // Наша тестовая буква
+let targetLetter = ''; 
+
+// Задаем наш словарь. 
+// Я вписал алфавит иврита для отработки моторики письма справа-налево
+const alphabet = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'כ', 'ל', 'מ', 'נ', 'ס', 'ע', 'פ', 'צ', 'ק', 'ר', 'ש', 'ת'];
+
+// Функция выбора случайной буквы
+function setRandomLetter() {
+    const randomIndex = Math.floor(Math.random() * alphabet.length);
+    targetLetter = alphabet[randomIndex];
+    console.log(`🔀 Выбрана новая буква: ${targetLetter}`);
+}
 
 opentype.load('BN_World.ttf', function(err, font) {
     if (err) {
@@ -26,11 +37,14 @@ opentype.load('BN_World.ttf', function(err, font) {
         return;
     }
     targetFont = font;
+    
+    // При первом запуске берем случайную букву, а не фиксированную
+    setRandomLetter(); 
     drawTargetLetter();
 });
 
 function drawTargetLetter() {
-    if (!targetFont) return;
+    if (!targetFont || !targetLetter) return;
 
     const fontSize = Math.min(canvas.width, canvas.height) * 0.6; 
     const textWidth = targetFont.getAdvanceWidth(targetLetter, fontSize);
@@ -41,6 +55,12 @@ function drawTargetLetter() {
     letterPath = targetFont.getPath(targetLetter, startX, startY, fontSize);
     letterPath.fill = '#e0e0e0'; 
     letterPath.draw(ctx);
+}
+
+// НОВАЯ ФУНКЦИЯ: Вызывается при нажатии кнопки "Далее ➔"
+function nextLetter() {
+    setRandomLetter(); // 1. Выбираем новую букву
+    clearCanvas();     // 2. Очищаем холст (эта функция сама перерисует новую targetLetter)
 }
 
 // --- ФАЗА 3: ЗАХВАТ ВВОДА (ПОДДЕРЖКА ОТРЫВНЫХ ШТРИХОВ) ---
@@ -132,5 +152,3 @@ function clearCanvas() {
         resultElement.style.color = "#333";
     }
 }
-
-//проверка
