@@ -55,7 +55,7 @@ opentype.load('BN_World.ttf', function(err, font) {
 function drawTargetLetter() {
     if (!targetFont || !targetLetter) return;
 
-    const fontSize = Math.min(canvas.width, canvas.height) * 0.6; 
+    const fontSize = Math.min(canvas.width, canvas.height) * 0.8; 
     const textWidth = targetFont.getAdvanceWidth(targetLetter, fontSize);
     
     const startX = (canvas.width - textWidth) / 2;
