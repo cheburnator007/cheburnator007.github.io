@@ -1,0 +1,19 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden; /* Жестко убираем любые полосы прокрутки */
+    background-color: #e0e5ec; /* Мягкий фон вокруг холста */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+canvas {
+    background-color: #ffffff; /* Белый "лист бумаги" */
+    /* КРИТИЧНО: запрещаем браузеру перехватывать свайпы на холсте */
+    touch-action: none; 
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1); /* Легкая тень для красоты */
+}
