@@ -111,7 +111,7 @@ const lettersDictionary = {
         name: 'Тав (תָּו)', 
         transcription: '[т]', 
         desc: 'Читается как "Т".' 
-    }
+    },
 	// СОФИТЫ
 
     'ך': { 
