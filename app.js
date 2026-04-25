@@ -83,44 +83,42 @@ canvas.addEventListener('pointercancel', stopDrawing);
 
 function startDrawing(e) {
     isDrawing = true;
-    userStroke = []; // Очищаем старый массив при новом начале
+    // ВАЖНО: Мы больше НЕ очищаем userStroke = [] здесь!
     
-    // Рисуем первую точку
+    ctx.beginPath(); // Начинаем новый визуальный путь (чтобы штрихи не склеивались)
     draw(e);
 }
 
 function draw(e) {
     if (!isDrawing) return;
 
-    // Получаем точные координаты относительно холста
     const rect = canvas.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
-    // Сохраняем координаты для будущего анализа
     userStroke.push({ x, y, timestamp: Date.now() });
 
-    // Визуализация на холсте (черная линия поверх серого трафарета)
     ctx.lineWidth = 8;
-    ctx.strokeStyle = '#2c3e50'; // Темно-синий/черный цвет для контраста
+    ctx.strokeStyle = '#2c3e50';
     
-    // Рисуем линию к текущей точке
-    if (userStroke.length > 1) {
-        const prevPoint = userStroke[userStroke.length - 2];
-        ctx.beginPath();
-        ctx.moveTo(prevPoint.x, prevPoint.y);
-        ctx.lineTo(x, y);
-        ctx.stroke();
-    }
+    // Рисуем линию
+    ctx.lineTo(x, y);
+    ctx.stroke();
+    
+    // Сразу начинаем новый путь от этой же точки, чтобы линия была плавной
+    ctx.beginPath();
+    ctx.moveTo(x, y);
 }
 
 function stopDrawing() {
     if (!isDrawing) return;
     isDrawing = false;
-   
-    if (userStroke.length > 5) {
-        checkAccuracy(); // Вызываем проверку!
-    }
+    
+    // Сбрасываем путь, чтобы следующий штрих (при новом касании) начался с чистого листа, а не тянулся от старого
+    ctx.beginPath(); 
+    
+    // ВАЖНО: Мы больше НЕ вызываем checkAccuracy() автоматически!
+    console.log(`Штрих завершен. Всего точек в памяти: ${userStroke.length}`);
 }
 
 // --- ФАЗА 4: ПРОВЕРКА ТОЧНОСТИ ---
